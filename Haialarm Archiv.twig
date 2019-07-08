@@ -1,0 +1,5 @@
+<ul style="list-style-type:none">
+    {% for episode in podcast.episodes %}
+      <li style="margin-bottom:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.slug }}: {{ episode.title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:150px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:150px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
+    {% endfor %}
+</ul>
