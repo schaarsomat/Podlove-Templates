@@ -1,0 +1,26 @@
+{% for season in podcast.seasons %}
+    <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2>
+    <p>{{ season.summary }}</p>
+    <p>Die Staffel ist am {{ season.startDate.format('d.m.Y') }} gestartet{% if season.running %} und sie läuft gerade{% endif %}. Die erste Episode hieß "{{ season.firstEpisode.title }}" und wir haben sie am {{ season.firstEpisode.recordingDate.format('d.m.Y') }} aufgenommen.</p>
+    <h3>Episodenliste:</h3>
+        <table style="border:0px">
+            <thead>
+                <tr>
+                    <th style="border:0px;text-align:left;vertical-align:top;width:7%"><u>Nr.</u></th>
+                    <th style="border:0px;text-align:left;vertical-align:top"><u>Titel &amp; Zusammenfassung</u></th>
+                    <th style="border:0px;text-align:left;vertical-align:top;width:13%"><u>Dauer</u></th>
+                    <th style="border:0px;text-align:left;vertical-align:top;width:13%"><u>Downloads</u></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for episode in season.episodes %}
+                    <tr>
+                        <td style="border:0px;text-align:right;vertical-align:top">{{ episode.number }}</td>
+                        <td style="border:0px;text-align:left;vertical-align:top"><strong><a href="{{ episode.url }}">{{ episode.title }}</a></strong><br><small><i>{{ episode.summary }}</i></small><br><small><u>Aufgenommen am</u> {{ episode.recordingDate.format('d.m.Y') }}, <u>veröffentlicht am</u> {{ episode.publicationDate.format('d.m.Y') }}</small></td>
+                        <td style="border:0px;text-align:right;vertical-align:top">{{ episode.duration }}</td>
+                        <td style="border:0px;text-align:right;vertical-align:top">{{ episode.total_downloads | number_format(0, ',', '.') }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+{% endfor %}
