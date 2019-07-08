@@ -1,0 +1,9 @@
+<p>{{ episode.summary }}</p> {# fügt die Zusammenfassung der Episode ein #}
+
+{% if not is_feed %}   {# Der Player und die Metadaten mit Icons sollen nur auf der Website auftauchen, nicht im Podcatcher #}
+{{ episode.player }}
+
+<small><span class="podlove-duration" style="margin-right:150px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:150px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small>
+{% else %}    {# Für den Podcatcher werden die Metadaten ohne Icons ausgegeben #}
+<small><span class="podlove-duration">Dauer: {{ episode.duration }}, erschienen am {{ episode.publicationdate.format('d.m.Y') }}, bisher gab es {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads.</span>
+{% endif %}
