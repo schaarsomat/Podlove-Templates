@@ -1,8 +1,8 @@
-{% for season in podcast.seasons %}
-    <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2>
-    <p>{{ season.summary }}</p>
+{% for season in podcast.seasons %} {# für jede Staffel des Podcasts wird das Folgende wiederholt #}
+    <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2> {# Überschrift mit der Nummer der Staffel, ihrem Titel und einer Kurzzusammenfassung #}
+    <p>{{ season.summary }}</p> {# Die Zusammenfassung der Staffel und danach einige allgemeine Angaben dazu: Startdatum der Staffel sowie die erste Folge und ihr Aufnahmedatum. Außerdem prüfe ich, ob die Staffel gerade läuft, gegebenenfalls gibt es einen Hinweis im Text.  #}
     <p>Die Staffel ist am {{ season.startDate.format('d.m.Y') }} gestartet{% if season.running %} und sie läuft gerade{% endif %}. Die erste Episode hieß "{{ season.firstEpisode.title }}" und wir haben sie am {{ season.firstEpisode.recordingDate.format('d.m.Y') }} aufgenommen.</p>
-    <h3>Episodenliste:</h3>
+    <h3>Episodenliste:</h3> {# Die Episodenliste wird in einer Tabelle angelegt, deren Grundstruktur noch nicht HTML 5-konform ist. #} 
         <table style="border:0px">
             <thead>
                 <tr>
@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for episode in season.episodes %}
+                {% for episode in season.episodes %} {# für jede Episode der Staffel wird folgende Operation wiederholt #}
                     <tr>
                         <td style="border:0px;text-align:right;vertical-align:top">{{ episode.number }}</td>
                         <td style="border:0px;text-align:left;vertical-align:top"><strong><a href="{{ episode.url }}">{{ episode.title }}</a></strong><br><small><i>{{ episode.summary }}</i></small><br><small><u>Aufgenommen am</u> {{ episode.recordingDate.format('d.m.Y') }}, <u>veröffentlicht am</u> {{ episode.publicationDate.format('d.m.Y') }}</small></td>
