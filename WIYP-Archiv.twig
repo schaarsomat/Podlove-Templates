@@ -1,7 +1,7 @@
 {% for season in podcast.seasons %} {# für jede Staffel des Podcasts wird das Folgende wiederholt #}
     <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2> {# Überschrift mit der Nummer der Staffel, ihrem Titel und einer Kurzzusammenfassung #}
     <p>{{ season.summary }}</p> {# Die Zusammenfassung der Staffel und danach einige allgemeine Angaben dazu: Startdatum der Staffel sowie die erste Folge und ihr Aufnahmedatum. Außerdem prüfe ich, ob die Staffel gerade läuft, gegebenenfalls gibt es einen Hinweis im Text.  #}
-    <p>Die Staffel ist am {{ season.startDate.format('d.m.Y') }} gestartet{% if season.running %} und sie läuft gerade{% endif %}. Die erste Episode hieß "{{ season.firstEpisode.title }}" und wir haben sie am {{ season.firstEpisode.recordingDate.format('d.m.Y') }} aufgenommen. Die Staffel hat{% if season.running %} bisher{% endif %} {{ season.episodes|length }} Episoden.</p>
+    <p>Die Staffel ist am {{ season.startDate.format('d.m.Y') }} gestartet{% if season.running %} und sie läuft gerade{% endif %}. Die erste Episode hieß "{{ season.firstEpisode.title }}" und wir haben sie am {{ season.firstEpisode.recordingDate.format('d.m.Y') }} aufgenommen. Staffel {{ season.number }} hat{% if season.running %} bisher{% endif %} {{ season.episodes|length }} Episoden.</p>
     <h3>Episodenliste:</h3> {# Die Episodenliste wird in einer Tabelle angelegt, das ist so noch nicht HTML 5-konform. #} 
         <table style="border:0px">
             <thead>
