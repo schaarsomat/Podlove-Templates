@@ -1,20 +1,33 @@
 {% set episodename = episode.title %} {# Variable setzen für später #}
 <h3>Moderation:</h3>
 [podlove-episode-contributor-list role="stammbesatzung"]
-{% if episode.contributors({group:"guests"})|length > 0 %} {# falls die Episode mehr als null Gäste hat, folgendes Ausgeben #}
-	<h3>Zu Gast:</h3>
-	[podlove-episode-contributor-list role="guests"]
-	{% for contributor in episode.contributors({group:"guests"}) %}  {# alle Contributors der Gruppe "guests" durchgehen #}
-		{% if contributor.episodes|length >1 %} {# Wenn der Gast mehr als 1x dabei war, folgendes ausgeben #}
-			<h3>Weitere Episoden mit {{ contributor.name }}:</h3>
-      <ul>
-      {% for episode in contributor.episodes %}  {# alle Episoden mit dem Gast durchgehen #}
-				{% if episode.title != episodename %} {# alle Episoden bis auf die aktuelle auflisten #}
-        	<li><a href="{{ episode.url }}">{{ episode.title }}</a></li>
-        {% endif %}
-      {% endfor %}
-      </ul>
-		{% endif %}
-  {% endfor %}
+{% if episode.contributors({group:"guests"})|length > 0 %}
+    <h3>Zu Gast:</h3>
+    [podlove-episode-contributor-list role="guests"]
 {% endif %}
+{% for contributor in episode.contributors({group:"guests"}) %}
+{% set anzahl = contributor.episodes|length - 1 %} {# Die Anzahl der Episoden mit diesem Gast ermitteln und um die aktuelle Episode reduzieren #}
+    {% if anzahl == 1 %} {# Wenn es genau 1 Episode ist, Überschrift im Singular ausgeben #}
+        <h3>Die andere Episode mit {{ contributor.name }}:</h3>
+        <ul>
+        {% for episode in contributor.episodes %} {# alle Episoden mit diesem Gast durchgehen #}
+            {% if episode.title != episodename %} {# alle außer der aktuellen Episode auflisten #}
+                <li><a href="{{ episode.url }}">{{ episode.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+
+    {% if anzahl >1 %} {# War der Gast in mehr Episoden als der aktuellen + 1 zu Gäst, Überschrift in der Mehrzahl ausgeben #}
+        <h3>Weitere Episoden mit {{ contributor.name }}:</h3>
+        <ul>
+        {% for episode in contributor.episodes %}
+            {% if episode.title != episodename %}
+                <li><a href="{{ episode.url }}">{{ episode.title }}</a></li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+    {% endif %}
+{% endfor %}
 <p style="margin-bottom:50px">&nbsp;</p>
+
