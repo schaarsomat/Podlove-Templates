@@ -1,0 +1,20 @@
+{% set episodename = episode.title %} {# Variable setzen für später #}
+<h3>Moderation:</h3>
+[podlove-episode-contributor-list role="stammbesatzung"]
+{% if episode.contributors({group:"guests"})|length > 0 %} {# falls die Episode mehr als null Gäste hat, folgendes Ausgeben #}
+	<h3>Zu Gast:</h3>
+	[podlove-episode-contributor-list role="guests"]
+	{% for contributor in episode.contributors({group:"guests"}) %}  {# alle Contributors der Gruppe "guests" durchgehen #}
+		{% if contributor.episodes|length >1 %} {# Wenn der Gast mehr als 1x dabei war, folgendes ausgeben #}
+			<h3>Weitere Episoden mit {{ contributor.name }}:</h3>
+      <ul>
+      {% for episode in contributor.episodes %}  {# alle Episoden mit dem Gast durchgehen #}
+				{% if episode.title != episodename %} {# alle Episoden bis auf die aktuelle auflisten #}
+        	<li><a href="{{ episode.url }}">{{ episode.title }}</a></li>
+        {% endif %}
+      {% endfor %}
+      </ul>
+		{% endif %}
+  {% endfor %}
+{% endif %}
+<p style="margin-bottom:50px">&nbsp;</p>
