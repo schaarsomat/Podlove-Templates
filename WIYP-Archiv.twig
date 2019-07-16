@@ -1,8 +1,8 @@
-{% for season in podcast.seasons %} {# für jede Staffel des Podcasts wird das Folgende wiederholt #}
-    <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2> {# Überschrift mit der Nummer der Staffel, ihrem Titel und einer Kurzzusammenfassung #}
-    <p>{{ season.summary }}</p> {# Die Zusammenfassung der Staffel und danach einige allgemeine Angaben dazu: Startdatum der Staffel sowie die erste Folge und ihr Aufnahmedatum. Außerdem prüfe ich, ob die Staffel gerade läuft, gegebenenfalls gibt es einen Hinweis im Text.  #}
+{% for season in podcast.seasons %} {# repeat for each season #}
+    <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2> {# title and subtitle of each episode #}
+    <p>{{ season.summary }}</p> {# Summary of the season, start date of the season, title and recording date of the first episode, extrahint if the episode is running and episode count  #}
     <p>Die Staffel ist am {{ season.startDate.format('d.m.Y') }} gestartet{% if season.running %} und sie läuft gerade{% endif %}. Die erste Episode hieß "{{ season.firstEpisode.title }}" und wir haben sie am {{ season.firstEpisode.recordingDate.format('d.m.Y') }} aufgenommen. Staffel {{ season.number }} hat{% if season.running %} bisher{% endif %} {{ season.episodes|length }} Episoden.</p>
-    <h3>Episodenliste:</h3> {# Die Episodenliste wird in einer Tabelle angelegt, das ist so noch nicht HTML 5-konform. #} 
+    <h3>Episodenliste:</h3> {# episode list is done as a table which is not yet matching html 5-standarts #} 
         <table style="border:0px">
             <thead>
                 <tr>
@@ -13,7 +13,7 @@
                 </tr>
             </thead>
             <tbody>
-                {% for episode in season.episodes %} {# für jede Episode der Staffel wird folgende Operation wiederholt #}
+                {% for episode in season.episodes %} {# repeat for every episode #}
                     <tr>
                         <td style="border:0px;text-align:right;vertical-align:top">{{ episode.number }}</td>
                         <td style="border:0px;text-align:left;vertical-align:top"><strong><a href="{{ episode.url }}">{{ episode.title }}</a></strong><br><small><i>{{ episode.summary }}</i></small><br><small><u>Aufgenommen am</u> {{ episode.recordingDate.format('d.m.Y') }}, <u>veröffentlicht am</u> {{ episode.publicationDate.format('d.m.Y') }}</small></td>
