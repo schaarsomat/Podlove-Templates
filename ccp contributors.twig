@@ -1,24 +1,24 @@
-{% set episodename = episode.title %} {# Variable setzen für später #}
+{% set episodename = episode.title %} {# set variable for later use #}
 <h3>Moderation:</h3>
 [podlove-episode-contributor-list role="stammbesatzung"]
-{% if episode.contributors({group:"guests"})|length > 0 %}
+{% if episode.contributors({group:"guests"})|length > 0 %} {# if episode has more than zero guests, insert shortcode #}
     <h3>Zu Gast:</h3>
     [podlove-episode-contributor-list role="guests"]
 {% endif %}
 {% for contributor in episode.contributors({group:"guests"}) %}
-{% set anzahl = contributor.episodes|length - 1 %} {# Die Anzahl der Episoden mit diesem Gast ermitteln und um die aktuelle Episode reduzieren #}
-    {% if anzahl == 1 %} {# Wenn es genau 1 Episode ist, Überschrift im Singular ausgeben #}
+{% set anzahl = contributor.episodes|length - 1 %} {# find number of episodes with this specific guest and reduce it by one #}
+    {% if anzahl == 1 %} {# if guest was in exactly one other episode, insert singular headline #}
         <h3>Die andere Episode mit {{ contributor.name }}:</h3>
         <ul>
-        {% for episode in contributor.episodes %} {# alle Episoden mit diesem Gast durchgehen #}
-            {% if episode.title != episodename %} {# alle außer der aktuellen Episode auflisten #}
+        {% for episode in contributor.episodes %} 
+            {% if episode.title != episodename %} {# list episodes with this specific guest except this episode #}
                 <li><a href="{{ episode.url }}">{{ episode.title }}</a></li>
             {% endif %}
         {% endfor %}
         </ul>
     {% endif %}
 
-    {% if anzahl >1 %} {# War der Gast in mehr Episoden als der aktuellen + 1 zu Gäst, Überschrift in der Mehrzahl ausgeben #}
+    {% if anzahl >1 %} {# if guest was in more than one episode, insert plural form of headline #}
         <h3>Weitere Episoden mit {{ contributor.name }}:</h3>
         <ul>
         {% for episode in contributor.episodes %}
