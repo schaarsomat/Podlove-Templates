@@ -1,14 +1,14 @@
 <ul style="list-style-type:none">    
-    {% for episode in podcast.episodes %} {# Alle Episoden des Podcasts durchgehen und der Reihe nach auflisten #}
+    {% for episode in podcast.episodes %} {# list all episodes #}
       <li style="margin-bottom:20px;border-bottom:1px solid black"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.title }}</a></span><br />
-      {{ episode.subtitle }}<br /> {# Kurzzusammenfassung einfügen #}
+      {{ episode.subtitle }}<br /> {# insert subtitle #}
       Moderation: 
-     {% for contributor in episode.contributors({group:"stamm"}) %} {# Die Contributoren der Stammbesetzung durchgehen und einzeln benennen #}
+     {% for contributor in episode.contributors({group:"stamm"}) %} {# list contributors from group stamm #}
 		{% if contributor.visible %}
 				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
 		{% endif %}
 	{% endfor %}
-	{% if episode.contributors({group:"guests"})|length > 0 %} {# Wenn die Episode mehr als null Gäste hat, diese durchgehen und einzeln benennen #}
+	{% if episode.contributors({group:"guests"})|length > 0 %} {# if there are more than zero guests, list them #}
 	    Zu Gast: 
     	{% for contributor in episode.contributors({group:"guests"}) %}
     		{% if contributor.visible %}
@@ -16,7 +16,7 @@
     		{% endif %}	
     	{% endfor %}
     {% endif %}
-    <br />
+    <br /> {# insert date, duration and downloads #}
       <span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
     {% endfor %}
 </ul>
