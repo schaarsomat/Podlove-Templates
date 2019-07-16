@@ -1,3 +1,4 @@
+{# See it working http://whats-in-your-pants.de/podcast-archiv/ #}
 {% for season in podcast.seasons %} {# repeat for each season #}
     <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2> {# title and subtitle of each episode #}
     <p>{{ season.summary }}</p> {# Summary of the season, start date of the season, title and recording date of the first episode, extrahint if the episode is running and episode count  #}
