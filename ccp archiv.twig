@@ -10,14 +10,14 @@
     
       <li style="margin-bottom:20px;border-bottom:1px solid black"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ podcast.mnemonic }}{{ Nullen }}{{ episode.number }}: {{ episode.title }}</a></span><br />
       {{ episode.subtitle }}<br />
-      Moderation: 
+      <strong>Moderation:</strong> 
      {% for contributor in episode.contributors({group:"stamm"}) %}
 		{% if contributor.visible %}
 				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
 		{% endif %}
 	{% endfor %}
 	{% if episode.contributors({group:"guests"})|length > 0 %}
-	    Zu Gast: 
+	    <strong>Zu Gast:</strong> 
     	{% for contributor in episode.contributors({group:"guests"}) %}
     		{% if contributor.visible %}
     				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
