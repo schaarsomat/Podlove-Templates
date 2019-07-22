@@ -1,7 +1,14 @@
-{# see it working on http://haialarm-podcast.de/archiv-2/ #}
-<ul style="list-style-type:none">    {# lists episodes, bulletpoints arr turned of #}
+{# 
+itunes regulations do not allow episode numbers in the title-tag of an episode. To tackle this we check the 
+episode.number and use some conditionals. We could spare this and use episode.slug instead, but this only works if the
+used slug always matches the slug-scheme
+
+see it working on http://haialarm-podcast.de/archiv-2/ 
+#}
+
+<ul style="list-style-type:none">    {# lists episodes, bulletpoints are turned of #}
     {% for episode in podcast.episodes %} {# creates a list-element for each episode, links episode slug and title. I also insert the subtitle and date, duration and downloads. #}
-    {% if episode.number >= 10 %} {# if the number of this specific episode ist equal to oder greater than ten #}
+    {% if episode.number >= 10 and <= 99 %} {# if the number of this specific episode ist equal to oder greater than ten AND lesser than or equal to 99 #}
       {% set Nullen = 0 %}  {# set the variable 'Nullen' (german for zeroes) to '0' #}
     {% endif %}
     {% if episode.number < 10 %}  {# if we show one of the first nine episodes #}
