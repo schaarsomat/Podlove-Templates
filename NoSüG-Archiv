@@ -1,7 +1,13 @@
-{# see it working on http://das-nord-sued-gefaelle.de/archiv/ #}
 <ul style="list-style-type:none"> {# episodes are presented in a list, bulletpoints are turned off #}
+{% for episode in podcast.episodes %} {# creates a list-element for each episode, links episode slug and title. I also insert the subtitle and date, duration and downloads. #}
+    {% if episode.number >= 10 and <= 99 %} {# if the number of this specific episode ist equal to oder greater than ten AND lesser than or equal to 99 #}
+      {% set Nullen = 0 %}  {# set the variable 'Nullen' (german for zeroes) to '0' #}
+    {% endif %}
+    {% if episode.number < 10 %}  {# if we show one of the first nine episodes #}
+      {% set Nullen = 00 %}  {# set the variable 'Nullen' (german for zeroes) to '00' #}
+    {% endif %} {# now we can 'build' an episode-shortcode out of podcast.mnemonic, Nullen, episode.number which comes to e.g. NoSueG033 #}
     {% for episode in podcast.episodes %} {# Inserts a 20px margin at the top and a thin black line at the bottom of each list element. #}
-      <li style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.slug }}: {{ episode.title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
+      <li style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold">{{ podcast.mnemonic }}{{ Nullen }}{{ episode.number }}: {{ episode.title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
     {# Links slug and title of each episode, I also insert the subtitle, date, duration and downloads #}
     {% endfor %}
 </ul>
