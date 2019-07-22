@@ -1,6 +1,6 @@
 <ul style="list-style-type:none">    
     {% for episode in podcast.episodes %} 
-    {% if episode.number >= 10 %}
+    {% if episode.number >= 10 and <= 99 %}
       {% set Nullen = 0 %}
     {% endif %}
     {% if episode.number < 10 %}
