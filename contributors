@@ -1,31 +1,31 @@
 {% if episode.contributors({role:"moderator"})|length > 0 %}
     <h4>Moderation</h4>
-    <table>
+    <div class="tabelle">
         {% for contributor in episode.contributors({role:"moderator"}) %}
-            <tr>
-                <td>
+            <div class="zeile">
+                <div class="zelle">
                     <img src="{{ contributor.avatar.url }}" height="50" width="50" />
-                </td>
-                <td>
+                </div>
+                <div class="zelle">
                     {{ contributor.name }}
-                </td>
-                <td>
+                </div>
+                <div class="zelle">
                     {% for service in contributor.services({category: "social"}) %}
                         <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
                             <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
                         </a>
                     {% endfor %}
-                </td>
-                <td>
+                </div>
+                <div class="zelle">
                     {% for service in contributor.services({category: "donation"}) %}
                         <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
                             <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
                         </a>
                     {% endfor %}
-                </td>
-            </tr>
+                </div>
+            </div>
         {% endfor %}
-    </table>
+    </div>
 {% endif %}
 {% if episode.contributors({role:"guest"})|length > 0 %}
     {% if episode.contributors({role:"guest"})|length == 1 %}
@@ -33,30 +33,51 @@
     {% else %}
         <h4>Gäste</h4>
     {% endif %}
-    <table>
+    <div class="tabelle">
         {% for contributor in episode.contributors({role:"guest"}) %}
-            <tr>
-                <td>
+            <div class="zeile">
+                <div class="zelle">
                     <img src="{{ contributor.avatar.url }}" height="50" width="50" />
-                </td>
-                <td>
-                    {{ contributor.name }}
-                </td>
-                <td>
+                </div>
+                <div class="zelle">
+                    {{ contributor.name }}<br />
+                    <span style="font-style:italic">{{ contributor.comment }}</span><br />
+                    <span style="font-size:smaller;font-style:italic">{{ contributor.organisation }} {{ contributor.jobtitle }}</span>
+                </div>
+                <div class="zelle">
                     {% for service in contributor.services({category: "social"}) %}
                         <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
                             <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
                         </a>
                     {% endfor %}
-                </td>
-                <td>
+                </div>
+                <div class="zelle">
                     {% for service in contributor.services({category: "donation"}) %}
                         <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
                             <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
                         </a>
                     {% endfor %}
-                </td>
-            </tr>
+                </div>
+            </div>
         {% endfor %}
-    </table>
+    </div>
 {% endif %}
+
+<style>
+    div.tabelle {
+        disply: table;
+        border-collapse: collapse;
+    }
+    
+    div.zeile {
+        display: table-row;
+    }
+    
+    div.zelle { 
+        display:table-cell; 
+        border: none; 
+        padding:5px; 
+    }
+    
+
+</style>
