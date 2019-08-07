@@ -4,7 +4,7 @@
       {% set Nullen = 0 %}
     {% endif %}
     {% if episode.number < 10 %}
-      {% set Nullen = 00 %}
+      {% set Nullen = '00' %} {# The apostrophes are important, otherwise the 00 would be interpreted as a number and reduced to a single 0 #}
     {% endif %}
     
     
