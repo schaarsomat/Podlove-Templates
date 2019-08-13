@@ -1,6 +1,9 @@
 <ul style="list-style-type:none"> {# episodes are presented in a list, bulletpoints are turned off #}
 {% for episode in podcast.episodes %} {# creates a list-element for each episode, links episode slug and title. I also insert the subtitle and date, duration and downloads. #}
-    {% if episode.number >= 10 and <= 99 %} {# if the number of this specific episode ist equal to oder greater than ten AND lesser than or equal to 99 #}
+     {% if episode.number >= 100 %} {# if the number of this specific episode is equal to or greater than 100 the variable 'Nullen' (german for zeroes) shall be empty #}
+        {% set Nullen = '' %}
+    {% endif %}
+ {% if episode.number >= 10 and <= 99 %} {# if the number of this specific episode ist equal to oder greater than ten AND lesser than or equal to 99 #}
       {% set Nullen = 0 %}  {# set the variable 'Nullen' (german for zeroes) to '0' #}
     {% endif %}
     {% if episode.number < 10 %}  {# if we show one of the first nine episodes #}
