@@ -1,17 +1,6 @@
 <ul style="list-style-type:none">    
     {% for episode in podcast.episodes %} 
-      {% if episode.number >= 100 %} {# if the number of this specific episde ist greater than or equal to 100 the variable 'Nullen' (german for zeroes) shall be empty #}
-        {% set Nullen = '' %}
-    {% endif %}
-    {% if episode.number >= 10 and <= 99 %} {# we need one zero if the number of this specific episode ist greater than or equal to ten AND lesser than or equal to 99 #}
-      {% set Nullen = 0 %}
-    {% endif %}
-    {% if episode.number < 10 %} {# every episode with a number smaller than 10 needs to zeroes in its slug #}
-      {% set Nullen = '00' %} {# The apostrophes are important, otherwise the 00 would be interpreted as a number and reduced to a single 0 #}
-    {% endif %}
-    
-    
-      <li style="margin-bottom:20px;border-bottom:1px solid black"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ podcast.mnemonic }}{{ Nullen }}{{ episode.number }}: {{ episode.title }}</a></span><br />
+      <li style="margin-bottom:20px;border-bottom:1px solid black"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.post.post_title }}</a></span><br />
       {{ episode.subtitle }}<br />
       <strong>Moderation:</strong> 
      {% for contributor in episode.contributors({group:"stamm"}) %}
