@@ -24,7 +24,7 @@ https://www.campingcaravanpodcast.de/2016/10/15/ccp010-der-norwegen-trip/ #}
         <h3>Weitere Episoden mit {{ contributor.name }}:</h3>
         <ul>
         {% for episode in contributor.episodes %}
-            {% if episode.title != episodename %}
+            {% if episode.title != episodename %} {# list all episodes with this particular guest except this one #}
                 <li><a href="{{ episode.url }}">{{ episode.title }}</a></li>
             {% endif %}
         {% endfor %}
