@@ -4,17 +4,15 @@
         {% for contributor in episode.contributors({role:"moderator"}) %}
             <div class="zeile">
                 <div class="zelle">
-                    <img src="{{ contributor.avatar.url }}" height="50" width="50" />
+                    {% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 120} only %}
                 </div>
                 <div class="zelle">
-                    {{ contributor.name }}
+                    {{ contributor.name }}<br /><small>{{ contributor.jobtitle }} bei {{ contributor.organisation }}</small>
                 </div>
                 <div class="zelle">
                     {% for service in contributor.services({category: "social"}) %}
-                        <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
-                            <img width="32" height="32" src="{{ service.logoUrl }}" class="podlove-contributor-button" alt="{{ service.title }}" />
-                        </a>
-                    {% endfor %}
+                    <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">{{ service.image.html({width: 20}) }}  </a>
+{% endfor %}
                 </div>
                 <div class="zelle">
                     {% for service in contributor.services({category: "donation"}) %}
