@@ -1,22 +1,9 @@
 {# 
-itunes regulations do not allow episode numbers in the title-tag of an episode. To tackle this we check the 
-episode.number and use some conditionals. We could spare this and use episode.slug instead, but this only works if the
-used slug always matches the slug-scheme
-
 see it working on http://haialarm-podcast.de/archiv-2/ 
 #}
 
 <ul style="list-style-type:none">    {# lists episodes, bulletpoints are turned of #}
     {% for episode in podcast.episodes %} {# creates a list-element for each episode, links episode slug and title. I also insert the subtitle and date, duration and downloads. #}
-    {% if episode.number >= 100 %} {# if the number of this spcific episode is equal to or greater than 100 the varible 'Nullen' shall be empty #}
-        {% set Nullen = '' %}
-    {% endif %}
-    {% if episode.number >= 10 and <= 99 %} {# if the number of this specific episode ist equal to oder greater than ten AND lesser than or equal to 99 #}
-      {% set Nullen = 0 %}  {# set the variable 'Nullen' (german for zeroes) to '0' #}
-    {% endif %}
-    {% if episode.number < 10 %}  {# if we show one of the first nine episodes #}
-      {% set Nullen = 00 %}  {# set the variable 'Nullen' (german for zeroes) to '00' #}
-    {% endif %} {# now we can 'build' an episode-shortcode out of podcast.mnemonic, Nullen, episode.number which comes to e.g. HAP033 #}
-      <li style="margin-bottom:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ podcast.mnemonic }}{{ Nullen }}{{ episode.number }}: {{ episode.title }}</a></span><br /><span style="font-style:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
+          <li style="margin-bottom:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-style:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
     {% endfor %}
 </ul>
