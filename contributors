@@ -35,7 +35,7 @@
         {% for contributor in episode.contributors({role:"guest"}) %}
             <div class="zeile">
                 <div class="zelle">
-                    <img src="{{ contributor.avatar.url }}" height="50" width="50" />
+                    {% include '@contributors/avatar.twig' with {'avatar': contributor.avatar, 'size': 120} only %}
                 </div>
                 <div class="zelle">
                     {{ contributor.name }}<br />
