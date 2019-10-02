@@ -1,0 +1,15 @@
+<h3>Moderation:</h3>
+[podlove-episode-contributor-list group=macher]
+<h3>Danke an:</h3>
+[podlove-episode-contributor-list group=unterstuetzer]
+{% if episode.contributors({group:"studios"})|length > 0 %} {# check if there are any studios to attribute #}
+<h3>Für die Produktion bzw. O-Ton-Rechte danken wir</h3>
+[podlove-episode-contributor-list group=studios avatars=no]
+{% endif %}
+
+<h3>Abonnieren:</h3>
+<ul>
+<li><a href="http://haialarm-podcast.de/feed/mp3-high/">MP3-Feed</a></li>
+</ul>
+
+<p>Veröffentlicht von <a href="{{ podcast.publisherUrl }}" target="_blank">{{ podcast.publisherName }}</a> unter <a href="{{ podcast.license.url }}" target="_blank">{{ podcast.license.name }}</a>-Lizenz. Die Rechte an Film-Ausschnitten und ggf. Szenenfotos liegen bei den jeweiligen Studios bzw. deren Vertriebsfirmen. Für die Genehmigung beides in unserem Podcast und im Blog verwenden zu dürfen, danken wir sehr herzlich. Links zu Amazon sind immer Teil des Partnerprogramms von Amazon. Wenn Du darüber einen Film kaufst, erhalten wir eine kleine Provision. Du zahlst deswegen aber nicht mehr als sonst.</p>
