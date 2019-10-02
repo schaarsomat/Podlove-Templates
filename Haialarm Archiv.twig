@@ -1,18 +1,43 @@
 {# 
 see it working on http://haialarm-podcast.de/archiv-2/ 
 #}
-{% set Downloadsumme = 0 %} {# set a counting-variable to start from zero, 'Downloadsumme' means 'sum of all downloads' #}
-{% for episode in podcast.episodes %} {# iterate through all episodes and add the number of downloads to the counter #}
-    {% set Downloadsumme = Downloadsumme + episode.total_downloads %}
+<p>{{ podcast.summary }}</p> {# insert summary of the podcast #}
+
+
+{% set Downloadsumme = 0 %} {# set variable Downloadsumme (literary: 'sum of all downloads' #}
+{% set Episodenzaehler = podcast.episodes|length %} {# how many episodes are there #}
+{% for episode in podcast.episodes %}
+    {% set Downloadsumme = Downloadsumme + episode.total_downloads %} {# adds the total downloads of each episode to the variable Downloadsumme #}
 {% endfor %}
 
-{% set Durchschnitt = Downloadsumme / podcast.episodes|length %} {# produce an average of downloads per episode #}
-{# we use Durchschnitt|round in the following paragraph to avoid a floating number #}
+{% set Durchschnitt = Downloadsumme / Episodenzaehler %} {# calculate the average number of downloads per episode #}
 
-<p>{{ podcast.summary }}</p>
 <p style="margin-bottom:30px">Der {{ podcast.title }} besteht aus {{ Episodenzaehler }} Episoden. Jede davon wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen.</p>
-<ul style="list-style-type:none">    {# lists episodes, bulletpoints are turned of #}
-    {% for episode in podcast.episodes %} {# creates a list-element for each episode, links episode slug and title. I also insert the subtitle and date, duration and downloads. #}
-          <li style="margin-bottom:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-style:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
+
+<ul style="list-style-type:none"> {# reners a bullet point list without bullet points #}
+        {% for episode in podcast.episodes %} {# for each episode of the podcast: start with the title of the episode #}
+      <li style="margin-bottom:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:20px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:20px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small>
+      <br /><b>Moderation:</b> {# continue with attribution of the on air guys #}
+    {% for contributor in episode.contributors({group:"macher",order: "ASC", orderby: "name"}) %} 
+		{% if contributor.visible %}
+				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
+		{% endif %}
+	{% endfor %}
+	{% if episode.contributors({group:"unterstuetzer"})|length > 0 %}
+	    <strong>Danke an:</strong> {# shout out to supporters #}
+    	{% for contributor in episode.contributors({group:"unterstuetzer",order: "ASC", orderby: "name"}) %}
+    		{% if contributor.visible %}
+    				<span class="name">{{ contributor.name }} für {{ contributor.comment }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
+    		{% endif %}	
+    	{% endfor %}
+    {% endif %}
+    	{% if episode.contributors({group:"studios"})|length > 0 %}
+	    Sowie  {# and to the studios who made this particular episode happen #}
+    	{% for contributor in episode.contributors({group:"studios"}) %}
+    		{% if contributor.visible %}
+    				<span class="name">{{ contributor.name }} ({{ contributor.comment }})</span></span>{% if not loop.last %}, {% else %}. {% endif %}
+    		{% endif %}	
+    	{% endfor %}
+    {% endif %}</li>
     {% endfor %}
 </ul>
