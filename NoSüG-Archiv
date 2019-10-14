@@ -1,4 +1,43 @@
-<p>{{ podcast.summary }}</p>
+{% set total = 0 %}
+{% for episode in podcast.episodes %}
+    {% set total = total + episode.duration.totalMilliseconds %}
+{% endfor %}
+
+{% set Durchschnittslänge = total / podcast.episodes|length %}
+
+{% set hours   = total  // (1000 * 3600) %}
+{% set minutes = (total // (1000 * 60)) % 60 %}
+{% set seconds = (total // 1000) % 60 %}
+
+{% if hours < 10 %}
+    {% set hours = "0" ~ hours %}
+{% endif %}
+
+{% if minutes < 10 %}
+    {% set minutes = "0" ~ minutes %}
+{% endif %}
+
+{% if seconds < 10 %}
+    {% set seconds = "0" ~ seconds %}
+{% endif %}
+
+{% set durchschnitthours   = Durchschnittslänge  // (1000 * 3600) %}
+{% set durchschnittminutes = (Durchschnittslänge // (1000 * 60)) % 60 %}
+{% set durchschnittseconds = (Durchschnittslänge // 1000) % 60 %}
+
+{% if durchschnitthours < 10 %}
+    {% set durchschnitthours = "0" ~ durchschnitthours %}
+{% endif %}
+
+{% if durchschnittminutes < 10 %}
+    {% set durchschnittminutes = "0" ~ durchschnittminutes %}
+{% endif %}
+
+{% if durchschnittseconds < 10 %}
+    {% set durchschnittseconds = "0" ~ durchschnittseconds %}
+{% endif %}
+
+
 {% set Downloadsumme = 0 %}
 {% set Episodenzaehler = podcast.episodes|length %}
 {% for episode in podcast.episodes %}
@@ -7,7 +46,7 @@
 
 {% set Durchschnitt = Downloadsumme / Episodenzaehler %}
 
-{{ podcast.title }} besteht (incl. der Nullnummer und der Zwischenepisode 13b) aus {{ Episodenzaehler }} Episoden. Jede davon wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen.
+{{ podcast.title }} besteht (incl. der Nullnummer und der Zwischenepisode 13b) aus {{ Episodenzaehler }} Episoden. Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ seconds }} Sekunden. Die durchschnittliche Episode ist {{ durchschnitthours }} Stunden {{ durchschnittminutes }} und {{ durchschnittseconds }} Sekunden lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. 
 
 <ul style="list-style-type:none">
     {% for episode in podcast.episodes %}
