@@ -1,30 +1,69 @@
 {# 
 see it working on http://haialarm-podcast.de/archiv-2/ 
 #}
-<p>{{ podcast.summary }}</p> {# insert summary of the podcast #}
+<p>{{ podcast.summary }}</p>
 
 
-{% set Downloadsumme = 0 %} {# set variable Downloadsumme (literary: 'sum of all downloads' #}
-{% set Episodenzaehler = podcast.episodes|length %} {# how many episodes are there #}
+{% set total = 0 %}
 {% for episode in podcast.episodes %}
-    {% set Downloadsumme = Downloadsumme + episode.total_downloads %} {# adds the total downloads of each episode to the variable Downloadsumme #}
+    {% set total = total + episode.duration.totalMilliseconds %}
 {% endfor %}
 
-{% set Durchschnitt = Downloadsumme / Episodenzaehler %} {# calculate the average number of downloads per episode #}
+{% set Durchschnittslänge = total / podcast.episodes|length %}
 
-<p style="margin-bottom:30px">Der {{ podcast.title }} besteht aus {{ Episodenzaehler }} Episoden. Jede davon wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen.</p>
+{% set hours   = total  // (1000 * 3600) %}
+{% set minutes = (total // (1000 * 60)) % 60 %}
+{% set seconds = (total // 1000) % 60 %}
 
-<ul style="list-style-type:none"> {# reners a bullet point list without bullet points #}
-        {% for episode in podcast.episodes %} {# for each episode of the podcast: start with the title of the episode #}
-      <li style="margin-bottom:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:20px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:20px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small>
-      <br /><b>Moderation:</b> {# continue with attribution of the on air guys #}
-    {% for contributor in episode.contributors({group:"macher",order: "ASC", orderby: "name"}) %} 
+{% if hours < 10 %}
+    {% set hours = "0" ~ hours %}
+{% endif %}
+
+{% if minutes < 10 %}
+    {% set minutes = "0" ~ minutes %}
+{% endif %}
+
+{% if seconds < 10 %}
+    {% set seconds = "0" ~ seconds %}
+{% endif %}
+
+{% set durchschnitthours   = Durchschnittslänge  // (1000 * 3600) %}
+{% set durchschnittminutes = (Durchschnittslänge // (1000 * 60)) % 60 %}
+{% set durchschnittseconds = (Durchschnittslänge // 1000) % 60 %}
+
+{% if durchschnitthours < 10 %}
+    {% set durchschnitthours = "0" ~ durchschnitthours %}
+{% endif %}
+
+{% if durchschnittminutes < 10 %}
+    {% set durchschnittminutes = "0" ~ durchschnittminutes %}
+{% endif %}
+
+{% if durchschnittseconds < 10 %}
+    {% set durchschnittseconds = "0" ~ durchschnittseconds %}
+{% endif %}
+
+
+{% set Downloadsumme = 0 %}
+{% set Episodenzaehler = podcast.episodes|length %}
+{% for episode in podcast.episodes %}
+    {% set Downloadsumme = Downloadsumme + episode.total_downloads %}
+{% endfor %}
+
+{% set Durchschnitt = Downloadsumme / Episodenzaehler %}
+
+<p style="margin-bottom:20px">{{ podcast.title }} besteht aus {{ Episodenzaehler }} Episoden. Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ seconds }} Sekunden. Die durchschnittliche Episode ist {{ durchschnitthours }} Stunden {{ durchschnittminutes }} und {{ durchschnittseconds }} Sekunden lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. </p> 
+
+<ul style="list-style-type:none">
+        {% for episode in podcast.episodes %}
+      <li style="margin-bottom:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:20px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:20px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small><br /><b>Moderation:</b>
+    {% for contributor in episode.contributors({group:"macher",order: "ASC", orderby: "name"}) %}
 		{% if contributor.visible %}
 				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
 		{% endif %}
 	{% endfor %}
 	{% if episode.contributors({group:"unterstuetzer"})|length > 0 %}
-	    <strong>Danke an:</strong> {# shout out to supporters #}
+	    <strong>Danke an:</strong> 
     	{% for contributor in episode.contributors({group:"unterstuetzer",order: "ASC", orderby: "name"}) %}
     		{% if contributor.visible %}
     				<span class="name">{{ contributor.name }} für {{ contributor.comment }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
@@ -32,7 +71,7 @@ see it working on http://haialarm-podcast.de/archiv-2/
     	{% endfor %}
     {% endif %}
     	{% if episode.contributors({group:"studios"})|length > 0 %}
-	    Sowie  {# and to the studios who made this particular episode happen #}
+	    Sowie  
     	{% for contributor in episode.contributors({group:"studios"}) %}
     		{% if contributor.visible %}
     				<span class="name">{{ contributor.name }} ({{ contributor.comment }})</span></span>{% if not loop.last %}, {% else %}. {% endif %}
@@ -41,3 +80,4 @@ see it working on http://haialarm-podcast.de/archiv-2/
     {% endif %}</li>
     {% endfor %}
 </ul>
+
