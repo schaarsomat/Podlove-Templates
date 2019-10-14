@@ -3,7 +3,7 @@ displayed in a more compact way. See it working at http://www.meine-url-ist-laen
 
 {% for episode in podcast.episodes({limit:'11'}) %}
     {% if loop.first %}
-        <h1>Neueste Episode: {{ episode.post.post_title }}</h1>
+        <h1>Neueste Episode: <a href="{{ episode.url }}">{{ episode.post.post_title }}</a></h1>
         <p>{{ episode.summary }}</p>
         <p> </p>
         {{ episode.player }}
