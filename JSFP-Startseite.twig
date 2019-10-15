@@ -1,5 +1,5 @@
 {# shows the newest episode in full scale with player, shownotes and all. After that the next ten episodes are 
-displayed in a more compact way. See it working at http://www.meine-url-ist-laenger-als-deine.de! #}
+displayed in a more compact way and another 5 in a supercompact way. See it working at http://www.meine-url-ist-laenger-als-deine.de! #}
 
 {% for episode in podcast.episodes({limit:'16'}) %} {# Show the 16 newest episodes #}
     {% if episode.type == 'full' %} {# skip episodes that are marked as bonus or trailer #}
