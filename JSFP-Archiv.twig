@@ -11,37 +11,9 @@
 {% set minutes = (total // (1000 * 60)) % 60 %}
 {% set seconds = (total // 1000) % 60 %}
 
-{#
-{% if hours < 10 %}
-    {% set hours = "0" ~ hours %}
-{% endif %}
-
-{% if minutes < 10 %}
-    {% set minutes = "0" ~ minutes %}
-{% endif %}
-
-{% if seconds < 10 %}
-    {% set seconds = "0" ~ seconds %}
-{% endif %}
-#}
-
 {% set durchschnitthours   = Durchschnittslänge  // (1000 * 3600) %}
 {% set durchschnittminutes = (Durchschnittslänge // (1000 * 60)) % 60 %}
 {% set durchschnittseconds = (Durchschnittslänge // 1000) % 60 %}
-
-{# 
-{% if durchschnitthours < 10 %}
-    {% set durchschnitthours = "0" ~ durchschnitthours %}
-{% endif %}
-
-{% if durchschnittminutes < 10 %}
-    {% set durchschnittminutes = "0" ~ durchschnittminutes %}
-{% endif %}
-
-{% if durchschnittseconds < 10 %}
-    {% set durchschnittseconds = "0" ~ durchschnittseconds %}
-{% endif %} 
-#}
 
 {{ podcast.title }} besteht (incl. der Episoden von "<a href="http://www.meine-url-ist-laenger-als-deine.de/?cat=61">Wie klingt Dein Tag?</a>" und dem <a href="http://www.meine-url-ist-laenger-als-deine.de/?podcast=der-podcast-eintopf">Podcast-Eintopf</a>) aus {{ podcast.episodes|length }} veröffentlichten Episoden. 
 {% if podcast.episodes({post_status: 'future'})|length > 0 %}
