@@ -1,21 +1,26 @@
-{# shows the newest episode in full scale with player, shownotes and all. After that the next ten episodes are 
+{# indicates if there is an episode planned for future release, shows the newest episode in full scale with player, some meta data and shownotes. After that the next ten episodes are 
 displayed in a more compact way and another 5 in a supercompact way. See it working at http://www.meine-url-ist-laenger-als-deine.de! #}
 
-{% for episode in podcast.episodes({limit:'16'}) %} {# Show the 16 newest episodes #}
-    {% if episode.type == 'full' %} {# skip episodes that are marked as bonus or trailer #}
-        {% if loop.first %} {# only for the newest episode: Show webplayer, episode info and shownotes #}
-            <h1>Neueste Episode: <a href="{{ episode.url }}">{{ episode.post.post_title }}</a></h1>
+    {% for episode in podcast.episodes({post_status: 'future'}) %}
+        <p style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr. </p>
+    {% endfor %}
+{% for episode in podcast.episodes({limit:'16'}) %}
+    {% if episode.type == 'full' %}
+        {% if loop.first %}
+            <h1><span style="font-size:0.4em'>Neueste Episode:</span> <br /><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></h1>
             <p>{{ episode.summary }}</p>
             <p> </p>
             {{ episode.player }}
             <small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate }}</span></small>
             <p> </p>
-            {{ episode.post.post_content }} {# HTML content a.k.a. shownotes #}
+            {{ episode.post.post_content }}
             <p style="margin-bottom:30px">&nbsp;</p>
+        
+
             <h1>Ältere Episoden:</h1>
-        {% elseif loop.index > 10 %} {# the last 5 episodes in this list shall only be shown by title and publication date #}
+        {% elseif loop.index > 10 %}
             <p><a href="{{ episode.url }}"><b>{{ episode.post.post_title }}</b></a> vom {{ episode.publicationDate }}</p>
-        {% else %}    {# episodes from 2 up to 10 shall be shown with episode info like duration and publication date #}
+        {% else %}    
             {% set Stunden = episode.duration.hours %}
             {% set Minuten = episode.duration.minutes %} 
             {% set Sekunden = episode.duration.seconds %}
