@@ -1,0 +1,20 @@
+{# sets up on the player.twig in this repo, but adds a nice, little touch. 
+See it working on http://www.meine-url-ist-laenger-als-deine.de/?podcast=jsfp246-daenemarkurlaub #}
+
+<p>{{ episode.summary }}</p>
+<p> </p>
+{% if not is_feed() %}
+  {{ episode.player }}
+  <p><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate }}</span></small></p>
+  {% if is_single() %} {# if the user visits the episode blog post, he gets information about the number of chapter marks in this episode and the average duration of each one #}
+    {% set total = 0 %}
+    {% set total = total + episode.duration.totalMilliseconds / episode.chapters|length %}
+    {% set hours   = total  // (1000 * 3600) %}
+    {% set minutes = (total // (1000 * 60)) % 60 %}
+    {% set seconds = (total // 1000) % 60 %}
+    <p>Diese Episode hat {{ episode.chapters|length }} Kapitelmarken und jede von ihnen ist durchschnittlich ca. {% if hours > 0 %} {{ hours }} Stunden{% endif %} {{ minutes }} Minuten und {{ seconds }} Sekunden lang.</p>
+  {% endif %}
+  {% else %}
+  <small><p class="podlove-duration">Dauer: {{ episode.duration }}, erschienen am {{ episode.publicationdate }}.</p></small>
+  <p>Alle Links und Shownotes findest Du auch <a href="{{ episode.url }}">in meinem Blog</a>.</p>
+{% endif %}
