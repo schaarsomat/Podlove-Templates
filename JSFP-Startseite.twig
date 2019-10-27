@@ -1,8 +1,7 @@
 {# indicates if there is an episode planned for future release, shows the newest episode in full scale with player, some meta data and shownotes. After that the next ten episodes are 
 displayed in a more compact way and another 5 in a supercompact way. See it working at http://www.meine-url-ist-laenger-als-deine.de! #}
-
     {% for episode in podcast.episodes({post_status: 'future'}) %}
-        <p style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr. </p>
+        <p style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr{% if episode.chapters|length > 0 %} {% set position = 0 %} und hat {{ episode.chapters|length }} Kapitelmarken, unter anderem {% for chapter in episode.chapters|slice(2,6) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Du kannst Dich auf {{ episode.duration }} feinste Unterhaltung freuen. {% endif %}</p>
     {% endfor %}
 {% for episode in podcast.episodes({limit:'16'}) %}
     {% if episode.type == 'full' %}
