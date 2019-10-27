@@ -1,0 +1,40 @@
+{% for episode in podcast.episodes({post_status: 'future'}) %}
+    <li><span style="color: #a59f9f;margin-top:20px;text-size:1.5 em">Unsere nächste Episode <b>{{ episode.post.post_title }}</b></span> erscheint am {{ episode.publicationDate }}.</li>
+{% endfor %}
+{% for episode in podcast.episodes({limit:'11'}) %}
+    {% if episode.type == 'full' %}
+        {% if loop.first %}
+            <h1><span style="text-decoration:underline;bold">Neueste Episode:</span> <br /><span style="text-size:2.2 em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span></h1>
+            {{ episode.player }}
+            <small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate }}</span><a href="{{ episode.url }}#comments">Bisher {{ episode.post.comment_count }} Kommentar(e)</a>.</small>
+            <p> </p>
+            {{ episode.post.post_content }}
+            <p style="margin-bottom:30px">&nbsp;</p>
+
+            <h1>Ältere Episoden:</h1>
+        
+        {% else %}
+            {% set Stunden = episode.duration.hours %}
+            {% set Minuten = episode.duration.minutes %} 
+            {% set Sekunden = episode.duration.seconds %}
+            <p style="margin-top:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {% if Stunden > 0 %}{{ Stunden }}{% endif %}
+            {% if Stunden  == 1 %} Stunde
+            {% elseif Stunden  > 1 %} Stunden
+            {% endif %}
+        {{ Minuten }} 
+            {% if Minuten == 0 %} 0 Minuten
+            {% elseif Minuten == 1 %} Minute
+            {% elseif Minuten > 1 %} Minuten
+            {% endif %} 
+            und {{ Sekunden }} 
+            {% if Sekunden == 0 %} Sekunden
+            {% elseif Sekunden == 1 %} Sekunden 
+            {% elseif Sekunden > 1 %} Sekunden 
+            {% endif %}
+      
+          </span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span> </small></li>
+        {% endif %}
+    {% endif %}
+{% endfor %}
+
+<p><a href="http://das-nord-sued-gefaelle.de/archiv/">Weitere Episoden gibt es im Archiv</a></p>
