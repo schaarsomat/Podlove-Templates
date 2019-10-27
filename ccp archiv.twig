@@ -1,22 +1,35 @@
-<ul style="list-style-type:none">    
-    {% for episode in podcast.episodes %} 
-      <li style="margin-bottom:20px;border-bottom:1px solid black"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.post.post_title }}</a></span><br />
-      {{ episode.subtitle }}<br />
-      <strong>Moderation:</strong> 
-     {% for contributor in episode.contributors({group:"stamm"}) %}
-		{% if contributor.visible %}
-				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
-		{% endif %}
-	{% endfor %}
-	{% if episode.contributors({group:"guests"})|length > 0 %}
-	    <strong>Zu Gast:</strong> 
-    	{% for contributor in episode.contributors({group:"guests"}) %}
-    		{% if contributor.visible %}
-    				<span class="name">{{ contributor.name }}</span></span>{% if not loop.last %}, {% else %}. {% endif %}
-    		{% endif %}	
-    	{% endfor %}
-    {% endif %}
-    <br />
-      <span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
+<p>{{ podcast.summary }}</p>
+
+{% set total = 0 %}
+{% for episode in podcast.episodes %}
+    {% set total = total + episode.duration.totalMilliseconds %}
+{% endfor %}
+
+{% set Durchschnittslänge = total / podcast.episodes|length %}
+
+{% set hours   = total  // (1000 * 3600) %}
+{% set minutes = (total // (1000 * 60)) % 60 %}
+{% set seconds = (total // 1000) % 60 %}
+
+{% set durchschnitthours   = Durchschnittslänge  // (1000 * 3600) %}
+{% set durchschnittminutes = (Durchschnittslänge // (1000 * 60)) % 60 %}
+{% set durchschnittseconds = (Durchschnittslänge // 1000) % 60 %}
+
+{% set Downloadsumme = 0 %}
+{% set Episodenzaehler = podcast.episodes|length %}
+{% for episode in podcast.episodes %}
+    {% set Downloadsumme = Downloadsumme + episode.total_downloads %}
+{% endfor %}
+
+{% set Durchschnitt = Downloadsumme / Episodenzaehler %}
+
+<p>{{ podcast.title }} besteht bisher aus {{ Episodenzaehler }} Episoden. Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ seconds }} Sekunden. Die durchschnittliche Episode ist {{ durchschnitthours }} {% if durchschnitthours == 1 %} Stunde {% else %} Stunden{% endif %} {{ durchschnittminutes }} {% if durchschnittminutes == 1 %} Minute {% else %} Minuten{% endif %} und {{ durchschnittseconds }} {% if durchschnittseconds == 1 %} Sekunde {% else %} Sekunden{% endif %} lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. </p>
+
+<ul style="list-style-type:none">
+    {% for episode in podcast.episodes({post_status: 'future'}) %}
+        <li style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr{% if episode.chapters|length > 0 %} {% set position = 0 %} und hat {{ episode.chapters|length }} Kapitelmarken, unter anderem {% for chapter in episode.chapters|slice(4,8) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Du kannst Dich auf {{ episode.duration }} feinsten Camping-Content freuen. {% endif %}</li>
+    {% endfor %}
+    {% for episode in podcast.episodes %}
+      <li style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-decoration:italic">{{ episode.subtitle }}</span><br />Dazu gab es {% if episode.post.comment_count > 0 %} <a href="{{ episode.url}}#comments">{{ episode.post.comment_count }} Kommentar(e)</a>{% else %} bislang keine <a href="{{ episode.url }}#comments">Kommentare</a>{% endif %}.<br /><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span></small></li>
     {% endfor %}
 </ul>
