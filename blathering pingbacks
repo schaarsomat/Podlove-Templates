@@ -1,0 +1,11 @@
+    {% if episode.chapters|length >0 %} {# falls es mehr als 0 Kapitelmarken gibt #}
+    <h3>Pingbacks:</h3>
+    <ul style="list-style-type:none">
+    {% for chapter in episode.chapters %} {# durch Kapitelmarken iterieren #}
+        <li>{{ chapter.time }}: {# Startzeit ausgeben #}
+        {% if chapter.link %}}<a href="{{ chapter.link }}" target="_blank">{{ chapter.title }}</a> {falls das Kapitel einen externen Link hat verlinken #}
+        {% else %}{{ chapter.title }} {% endif %} {# andernfalls ohne Link den Titel ausgeben #}
+        </li>
+    {% endfor %}
+    </ul>
+    {% endif %}
