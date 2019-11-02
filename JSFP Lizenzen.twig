@@ -1,0 +1,74 @@
+{# Kinda everything you might want to show underneath the shownotes: Contributors, related episodes and the license of this episode #}
+<p>&nbsp;</p>
+{% if episode.contributors({group: 'gaeste'})|length > 0 %} {# if there are any guests on this episodes #}
+    <h3>Außer mir noch mit dabei:</h3>
+    <table style="border-width: 0px;">
+        <tbody style="border-width: 0px;">
+            {% for contributor in episode.contributors({group: 'gaeste'}) %} {# iterate through group 'gaeste', you want to use the slug of the group here! #}
+                <tr>
+                    <td style="border-width: 0px; vertical-align:top; text-align: center;">
+                         {{ contributor.image.html({width: 100, height: 100, alt: contributor.name, title: contributor.name}) }} 
+                         {# show the image of your contributor #}
+                    </td>
+                    <td width="30%" style="border-width: 0px; vertical-align:top; text-align: left;">
+                        {% for service in contributor.services({category: "social"}) %}
+                        {# iterate through contributors social services and show icons #}
+                            <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+                                {{ service.image.html({width: 50, heigth: 50, alt: service.name}) }}
+                            </a>
+                        {% endfor %}
+                    </td>
+                    {% if contributor.services({category: "donation"})|length > 0 %}
+                    <td width="20%" style="border-width: 0px; vertical-align:top; text-align: left;">
+                        {% for service in contributor.services({category: "donation"}) %}
+                        {# iterate through contributors donation options and show icons if defined, #}
+                            <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+                                {{ service.image.html({width: 50, heigth: 50, alt: service.name}) }}
+                            </a>
+                        {% endfor %}
+                    </td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <td width="10%" style="border-width: 0px; vertical-align:top; text-align: center;">
+                        {{ contributor.name }}
+                    </td>
+                    <td width="30%" style="border-width: 0px; vertical-align:top; text-align: left;" {% if contributor.services({category: "donation"})|length > 0 %} colspan=2{% endif %}>
+                        &nbsp;
+                    </td>
+                    {% if contributor.services({category: "donation"})|length > 0 %}
+                    <td width="20%" style="border-width: 0px; vertical-align:top; text-align: left;">
+                        &nbsp;
+                    </td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endif %}
+{% set related_episodes = episode.relatedEpisodes %}
+
+{% if related_episodes %}
+
+	<h3>&Auml;hnliche Episoden:</h3>
+
+	<ul>
+	{% for related_episode in related_episodes %}
+		<li>
+			<a href="{{ related_episode.url }}">{{ related_episode.post.post_title }}</a> (vom {{ related_episode.publicationDate.format('j. F Y') }}, {{ related_episode.publicationDate.format('H:i') }} Uhr)
+		</li>
+	{% endfor %}
+	</ul>
+
+{% endif %}
+
+<h3>Das Kleingedruckte:</h3>
+
+{% for category in episode.categories({order: "ASC", orderby: "count"}) %}
+    {% if category.name == 'Wie klingt Dein Tag?' %}
+        <p><small>Der Sammelfeed für alle Teilnehmerbeiträge wird von mir bei <a href="http://www.fyyd.de">fyyd.de</a> kuratiert. Du kannst ihn unter <a href="https://fyyd.de/user/Schaarsen/subscribe/c8cb0af29b195dec1b35ab9ff8c95371">https://fyyd.de/user/Schaarsen/subscribe/c8cb0af29b195dec1b35ab9ff8c95371</a> abonnieren.</small></p>
+<p><small>Diese "Wie klingt Dein Tag?"-Episode wurde am {{ episode.recordingDate.format('d.m.Y') }} aufgenommen und am {{ episode.publicationDate.format('d.m.Y') }} unter <a href="{{ episode.license.url }}" target="_blank">{{ episode.license.name }}-Lizenz</a> veröffentlicht.</small></p>
+    {% else %}
+        <p><small>Diese Episode vom {{ podcast.title }} wurde am {{ episode.recordingDate.format('d.m.Y') }} aufgenommen. Veröffentlicht am {{ episode.publicationDate.format('d.m.Y') }} von <a href="{{ podcast.publisherUrl }}" target="_blank">{{ podcast.publisherName }}</a> unter <a href="{{ episode.license.url }}" target="_blank">{{ episode.license.name }}-Lizenz</a>. Intro und Outro habe ich aus dem Song "<a href="http://audionautix.com/index.php" target="_blank">Jenny's Theme" von Jason Shaw</a> zusammengeklöppelt, der das "No Fees. No ©opyright Hassles. Incredibly Free." anbietet. Mit "Partnerlink" gekennzeichnete Links sind Affiliate-Links zu Amazon oder Thomann. Für jeden Einkauf über so einen Link erhalte ich eine kleine Provision, Du zahlst deswegen nicht mehr. </small></p>
+    {% endif %}
+  {% endfor %}
