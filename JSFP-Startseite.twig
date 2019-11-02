@@ -1,8 +1,17 @@
-{# indicates if there is an episode planned for future release, shows the newest episode in full scale with player, some meta data and shownotes. After that the next ten episodes are 
+{# indicates if there is an episode planned for future release or maybe a draft for an episode, shows the newest episode in full scale with player, some meta data and part of the shownotes. After that the next ten episodes are 
 displayed in a more compact way and another 5 in a supercompact way. See it working at http://www.meine-url-ist-laenger-als-deine.de! #}
-    {% for episode in podcast.episodes({post_status: 'future'}) %}
-        <p style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr{% if episode.chapters|length > 0 %} {% set position = 0 %} und hat {{ episode.chapters|length }} Kapitelmarken, unter anderem {% for chapter in episode.chapters|slice(2,6) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Du kannst Dich auf {{ episode.duration }} feinste Unterhaltung freuen. {% endif %}</p>
-    {% endfor %}
+{% for episode in podcast.episodes({post_status: 'future'}) %}
+    <p style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr{% if episode.chapters|length > 0 %} {% set position = 0 %} und hat {{ episode.chapters|length }} Kapitelmarken, unter anderem {% for chapter in episode.chapters|slice(2,6) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Du kannst Dich auf {{ episode.duration }} feinste Unterhaltung freuen. {% endif %}</p>
+{% endfor %}
+{% if podcast.episodes({post_status: "draft"})|length > 0 %}
+    <p style="color: #a59f9f;margin-top:20px">{% if podcast.episodes({post_status: 'future'})|length > 0 %}Und: {% endif %}Ich habe mit den Vorbereitungen für 
+        {% for episode in podcast.episodes({post_status: 'draft', order: "ASC", orderby: "number"}) %}
+            "{{ episode.post.post_title }}"{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    {% if podcast.episodes({post_status: 'draft'})|length == 1 %} angefangen. Wann die Episode fertig ist und veröffentlicht wird, steht noch nicht fest.</p>
+    {% else %} angefangen. Veröffentlichungstermine gibt es bisher noch nicht.
+    {% endif %}
+{% endif %}
 {% for episode in podcast.episodes({limit:'16'}) %}
     {% if episode.type == 'full' %}
         {% if loop.first %}
