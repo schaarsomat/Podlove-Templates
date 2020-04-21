@@ -2,8 +2,6 @@
 See it working here: https://www.natuerlich-sh.de/stammbesetzung/
 I use free text for each contributor and call the template for every which one like this: 
 [podlove-template template="EinzelContributor" id="gesche" show_name="yes" social="yes" donations="yes"] 
-instead of comments find an (german) step-by-step-guide here: 
-http://joernschaar.de/podlove-templates-8-team-oder-gaesteliste/ #}
 #}
 
 {% if option.avatar_size %} 
