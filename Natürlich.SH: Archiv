@@ -1,0 +1,81 @@
+{# See it working: https://www.natuerlich-sh.de/archiv #}
+
+<p>{{ podcast.summary }}</p>
+
+<p>&nbsp;</p>
+
+{# it is not HTML5-compliant to use tables in this context, but it works ;) #}
+
+<table class="tabelle">
+    {% for episode in podcast.episodes %}
+    {% set kategorie = episode.show.title %}
+    <tr class="zeile">
+        <td class="zelle-bild">
+            <a href="{{ episode.url }}"><img src="{{ episode.image({fallback: true}).url }}" alt="{{ episode.title }}" title="{{ episode.title }}" class="logo"></a><br />
+            {# Delete this if you don't use categories and shows, or you will run into an error. IF you use them, remember to set YOUR categories instead of mine! #}
+            {% if kategorie == "Landeskunde" %}
+                <span class="landeskunde">{{ kategorie }}</span><br /> 
+                {{ podcast.subscribeButton({format: 'rectangle', color: '#1EABE1', style: 'frameless', size: 'small', show: 'landeskunde'}) }}
+            {% elseif kategorie == "Naturkunde" %}
+                <span class="naturkunde">{{ kategorie }}</span><br /> 
+                {{ podcast.subscribeButton({format: 'rectangle', color: '#c1272f', style: 'frameless', size: 'small', show: 'naturkunde'}) }}
+            {% endif %}
+            {# Stop deleting here! ;) #}
+            </td>
+        <td class="zelle-meta"><span class="episodentitel"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span> vom {{ episode.publicationdate.format('d.m.Y') }}<br />{{ episode.subtitle }}<br />
+        <small>
+            <strong>Moderation: </strong>
+            {# this will only work, if you use the same groups and roles for your contributors as I do. Change them to your needs or delete #}
+            {% for contributor in episode.contributors({role: 'moderation'}) %}{{ contributor.name }}{% if not loop.last %} und {% endif %}{% endfor %}
+            {% if episode.contributors({role: 'experte'})|length > 0 %} 
+                <strong>Experten:</strong> 
+                {% for contributor in episode.contributors({role: 'experte'}) %}{{ contributor.name }} ({{ contributor.organisation }}){% if not loop.last %}, {% endif %}{% endfor %}
+            {% endif %}
+            {% if episode.contributors({role: 'redaktion'})|length > 0 %} 
+                <strong>Redaktionelle Unterstützung:</strong> 
+                {% for contributor in episode.contributors({role: 'redaktion'}) %}{{ contributor.name }} ({{ contributor.comment }}){% if not loop.last %}, {% endif %}{% endfor %}
+            {% else %}&nbsp;    
+            {% endif %}
+            {# stop deleting again ;) #}
+        </small></td>
+    </tr>
+    {% endfor %}
+</table>
+
+<style>
+    .tabelle {
+        border: white 1px solid;
+    }
+    .zelle-bild {
+       width: 130px;
+       vertical-align:top;
+       border: white 1px solid; 
+    }
+    .zelle-meta {
+       vertical-align:top;
+       border: white 1px solid; 
+    }
+    .episodentitel {
+        font-family: 'Kanit';
+        font-weight: bold;
+    }
+    .logo {
+        width: 128px;
+        border: white 1px solid;
+        text-align: center;
+    }
+    .zeile {
+        margin-bottom: 20px;
+        border-bottom: 1px solid black;
+    }
+    .landeskunde {
+        color: #1EABE1;
+        font-family: 'Kanit';
+        font-weight: bold;
+    }
+    .naturkunde {
+        color: #c1272f;
+        font-family: 'Kanit';
+        font-weight: bold;
+    }
+</style>
