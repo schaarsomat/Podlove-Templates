@@ -1,0 +1,67 @@
+{# 
+This template displays guests of the podcast in a HTML 5 compliant way. It uses the flexbox-design and lists all episodes with
+this particular contributor as well.
+#}
+
+<p>Ein Podcast wie Natürlich.SH ist nur so gut wie seine Gäste. Unsere bislang {{ podcast.contributors({role: 'experte'})|length }} Expert*innen erklären Schleswig-Holstein aus dem FF, während wir nur staunend vor manchen Dingen stehen und ganz viele Fragen haben. Für spontanes Zeit nehmen, zustimmen und mitmachen danken wir: </p>
+
+
+<div class="container">
+    {% for contributor in podcast.contributors({role: 'experte'}) %}
+        <div class="mod">
+            <div class="item" style="width:30%">
+                {{ contributor.image.html({width: 300, height: 300, alt: contributor.name, title: contributor.name}) }}
+            </div>
+            <div class="item" style="font-family:Kanit;font-weight:bold">{{ contributor.name }}</div>
+            <div class="item" style="font-family:Kanit;font-size: small">{{ contributor.organisation }}</div>
+            <div class="item">
+                {% for service in contributor.services({category: "social"}) %}
+                    <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}" style="color:white">
+                        {{ service.image.html({width: 20, height: 20, alt: service.name}) }}
+                    </a>
+                {% endfor %}
+                {% for service in contributor.services({category: "donation"}) %}
+                    <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}" style="color:white">
+                        {{ service.image.html({width: 20, height: 20, alt: service.name}) }}
+                    </a>
+                {% endfor %}                
+            </div>
+            <div class="item">
+                {% for episode in contributor.episodes %}
+                    <span class="cont_ep"><a href="{{ episode.url }}" style="color: black">{{ episode.slug }}</a></span>
+                {% endfor %}
+            </div>
+        </div>
+    {% endfor %}
+</div>
+
+<style>
+   .container {
+       display: flex;
+       justify-content: flex-start;
+       align-items: flex-start;
+       gap: 1em 2em;
+       flex-flow: row wrap;
+   }
+   .mod {
+       display: flex;
+       justify-content: flex-start;
+       align-items: center;
+       flex-flow: column wrap;
+   }
+   .item {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       gap: 3px;
+       flex-flow: row wrap;
+   }
+   .cont_ep {
+       background-color: #cccccc;
+       padding: 8px;
+       margin: 4px;
+       font-family: Kanit;
+       font-weight: bold;
+       font-size: small;
+    }
+</style>
