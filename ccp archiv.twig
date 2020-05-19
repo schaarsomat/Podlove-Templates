@@ -1,3 +1,6 @@
+{# See it working on https://www.campingcaravanpodcast.de/episodenarchiv/ #}
+
+
 <p>{{ podcast.summary }}</p>
 
 {% set total = 0 %}
@@ -25,11 +28,9 @@
 
 <p>{{ podcast.title }} besteht bisher aus {{ Episodenzaehler }} Episoden. Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ seconds }} Sekunden. Die durchschnittliche Episode ist {{ durchschnitthours }} {% if durchschnitthours == 1 %} Stunde {% else %} Stunden{% endif %} {{ durchschnittminutes }} {% if durchschnittminutes == 1 %} Minute {% else %} Minuten{% endif %} und {{ durchschnittseconds }} {% if durchschnittseconds == 1 %} Sekunde {% else %} Sekunden{% endif %} lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. </p>
 
-<ul style="list-style-type:none">
-    {% for episode in podcast.episodes({post_status: 'future'}) %}
-        <li style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr{% if episode.chapters|length > 0 %} {% set position = 0 %} und hat {{ episode.chapters|length }} Kapitelmarken, unter anderem {% for chapter in episode.chapters|slice(4,8) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Du kannst Dich auf {{ episode.duration }} feinsten Camping-Content freuen. {% endif %}</li>
-    {% endfor %}
-    {% for episode in podcast.episodes %}
-      <li style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-decoration:italic">{{ episode.subtitle }}</span><br />Dazu gab es {% if episode.post.comment_count > 0 %} <a href="{{ episode.url}}#comments">{{ episode.post.comment_count }} Kommentar(e)</a>{% else %} bislang keine <a href="{{ episode.url }}#comments">Kommentare</a>{% endif %}.<br /><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span></small></li>
-    {% endfor %}
-</ul>
+{% for episode in podcast.episodes({post_status: 'future'}) %}
+    <p style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr{% if episode.chapters|length > 0 %} {% set position = 0 %} und hat {{ episode.chapters|length }} Kapitelmarken, unter anderem {% for chapter in episode.chapters|slice(4,8) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Du kannst Dich auf {{ episode.duration }} feinsten Camping-Content freuen. {% endif %}</p>
+{% endfor %}
+{% for episode in podcast.episodes %}
+  <p style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-decoration:italic">{{ episode.subtitle }}</span><br />Dazu gab es {% if episode.post.comment_count > 0 %} <a href="{{ episode.url}}#comments">{{ episode.post.comment_count }} Kommentar{% if episode.post.comment_count > 1 %}e{% endif %}</a>{% else %} bislang keine <a href="{{ episode.url }}#comments">Kommentare</a>, schreib doch einen{% endif %}.<br /><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschien am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span></small></p>
+{% endfor %}
