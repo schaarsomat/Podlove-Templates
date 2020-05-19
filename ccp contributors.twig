@@ -1,14 +1,64 @@
 {# See it working on https://www.campingcaravanpodcast.de/2016/10/04/ccp-009-der-auswanderer-iii/ or 
 https://www.campingcaravanpodcast.de/2016/10/15/ccp010-der-norwegen-trip/ #}
+{% if not is_feed() %} {# elaborate contributor info only on the website, not in the app. Avoids unloaded pics. #}
 {% set episodename = episode.title %} {# set variable for later use #}
-<h3>Moderation:</h3>
-[podlove-episode-contributor-list role="stammbesatzung"]
-{% if episode.contributors({group:"guests"})|length > 0 %} {# if episode has more than zero guests, insert shortcode #}
-    <h3>Zu Gast:</h3>
-    [podlove-episode-contributor-list role="guests"]
-{% endif %}
-{% for contributor in episode.contributors({group:"guests"}) %}
-{% set anzahl = contributor.episodes|length - 1 %} {# find number of episodes with this specific guest and reduce it by one #}
+    <h3>Moderation:</h3>
+    <div class="container">
+        {% for contributor in episode.contributors({role: 'stammbesatzung'}) %}
+        {# iterate through contributors of the group stammbesatzung and render profile pics, name and socialmedia services if provided #}
+            <div class="mod">
+                <div class="item" style="width:110px">
+                    {{ contributor.image.html({width: 100, height: 100, alt: contributor.name, title: contributor.name}) }}
+                </div>
+                <div class="item" style="font-weight:bold">
+                    {{ contributor.name }}
+                </div>
+                <div class="item">
+                    {% for service in contributor.services({category: "social"}) %}
+                        <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}" style="color:white">
+                            {{ service.image.html({width: 20, heigth: 20, alt: service.name}) }}
+                        </a>
+                    {% endfor %}
+                    {% for service in contributor.services({category: "donation"}) %}
+                        <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}" style="color:white">
+                            {{ service.image.html({width: 20, heigth: 20, alt: service.name}) }}
+                        </a>
+                    {% endfor %}                
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    {% if episode.contributors({role: 'guests'})|length > 0 %}
+    {# check if episode has more than zero guests, if so proceed like above #}
+        <h3>Zu Gast:</h3>
+        <div class="container">
+            {% for contributor in episode.contributors({role: 'guests'}) %}
+                <div class="mod">
+                    <div class="item" style="width:110px">
+                        {{ contributor.image.html({width: 100, height: 100, alt: contributor.name, title: contributor.name}) }}
+                    </div>
+                    <div class="item">
+                        <span style="font-weight:bold">{{ contributor.name }}</span>
+                    </div>
+                    <div class="item">
+                        {% for service in contributor.services({category: "social"}) %}
+                            <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}" style="color:white">
+                                {{ service.image.html({width: 20, heigth: 20, alt: service.name}) }}
+                            </a>
+                        {% endfor %}
+                        {% for service in contributor.services({category: "donation"}) %}
+                            <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}" style="color:white">
+                                {{ service.image.html({width: 20, heigth: 20, alt: service.name}) }}
+                            </a>
+                        {% endfor %}                
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% for contributor in episode.contributors({group:"guests"}) %}
+    {% set anzahl = contributor.episodes|length - 1 %} {# find number of episodes with this specific guest and reduce it by one #}
     {% if anzahl == 1 %} {# if guest was in exactly one other episode, insert singular headline #}
         <h3>Die andere Episode mit {{ contributor.name }}:</h3>
         <ul>
@@ -31,5 +81,34 @@ https://www.campingcaravanpodcast.de/2016/10/15/ccp010-der-norwegen-trip/ #}
         </ul>
     {% endif %}
 {% endfor %}
+{% endif %}
+
+{% if is_feed() %}
+{# text-based version of the above for podcast apps, does not load anything, so no images are missing #}
+    <p>Durch die Episode führen {% for contributor in episode.contributors({role: 'stammbesatzung', order: 'DESC', orderby: 'Name'}) %}{{ contributor.name }}{% if not loop.last %} und {% endif %}{% endfor %}.{% if episode.contributors({role: 'guests'})|length > 0 %} Diesmal zu Gast: {% for contributor in episode.contributors({role: 'guests'}) %}{{ contributor.name }}{% if not loop.last %}, {% endif %}{% endfor %}.{% endif %}</p>
+{% endif %}
 <p style="margin-bottom:50px">&nbsp;</p>
 
+<style>
+   .container {
+       display: flex;
+       justify-content: flex-start;
+       align-items: flex-start;
+       gap: 1em;
+       flex-flow: row wrap;
+       margin-bottom: 30px;
+   }
+   .mod {
+       display: flex;
+       justify-content: flex-start;
+       align-items: center;
+       flex-flow: column wrap;
+   }
+   .item {
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       gap: 3px;
+       flex-flow: row wrap;
+   }
+</style>
