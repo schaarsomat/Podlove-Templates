@@ -48,8 +48,7 @@
 
 {{ podcast.title }} besteht (incl. der Nullnummer und der Zwischenepisode 13b) aus {{ Episodenzaehler }} Episoden. Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ seconds }} Sekunden. Die durchschnittliche Episode ist {{ durchschnitthours }} Stunden {{ durchschnittminutes }} und {{ durchschnittseconds }} Sekunden lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. 
 
-<ul style="list-style-type:none">
-    {% for episode in podcast.episodes %}
-      <li style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></li>
-    {% endfor %}
-</ul>
+{% for episode in podcast.episodes %}
+  <p style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></p>
+{% endfor %}
+
