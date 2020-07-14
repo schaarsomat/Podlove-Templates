@@ -1,3 +1,5 @@
+<p>{{ podcast.summary }}</p>
+
 {% set total = 0 %}
 {% for episode in podcast.episodes %}
     {% set total = total + episode.duration.totalMilliseconds %}
@@ -46,9 +48,13 @@
 
 {% set Durchschnitt = Downloadsumme / Episodenzaehler %}
 
-{{ podcast.title }} besteht (incl. der Nullnummer und der Zwischenepisode 13b) aus {{ Episodenzaehler }} Episoden. Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ seconds }} Sekunden. Die durchschnittliche Episode ist {{ durchschnitthours }} Stunden {{ durchschnittminutes }} und {{ durchschnittseconds }} Sekunden lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. 
+<p>{{ podcast.title }} besteht (incl. der Nullnummer und der Zwischenepisode 13b) aus {{ Episodenzaehler }} Episoden. Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ seconds }} Sekunden. Die durchschnittliche Episode ist {{ durchschnitthours }} Stunden {{ durchschnittminutes }} und {{ durchschnittseconds }} Sekunden lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. </p>
 
-{% for episode in podcast.episodes %}
-  <p style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span> </small></p>
+<h2>Episodenliste:</h2>
+
+{% for episode in podcast.episodes({post_status: 'future'}) %}
+    <p style="color: #a59f9f;margin-top:20px">Die nächste Episode <b>"{{ episode.post.post_title }}"</b> erscheint am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr{% if episode.chapters|length > 0 %} und hat {{ episode.chapters|length }} Kapitelmarken, Themen unter anderem: {% for chapter in episode.chapters|slice(4,8) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Du kannst Dich auf {{ episode.duration }} feinste Unterhaltung freuen. {% endif %}</p>
 {% endfor %}
-
+{% for episode in podcast.episodes %}
+    <p style="margin-top:20px;border-bottom:1px grey solid"><span style="font-weight:bold"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-decoration:italic">{{ episode.subtitle }}</span> Dazu gab es bisher <a href="{{ episode.url }}#comments">{{ episode.post.comment_count }} {% if episode.post.comment_count == 1 %}Kommentar{% else %}Kommentare{% endif %}</a>.<br /><small><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {{ episode.duration }}</span><span class="podlove-duration" style="margin-right:75px"><img src="http://icons.joernschaar.de/kalender.png" alt="Diese Episode erschien am" title="Diese Episode erschient am" width="20px"> {{ episode.publicationdate.format('d.m.Y') }}</span><span class="podlove-duration"><img src="http://icons.joernschaar.de/downloads.png" alt="Downloads seit Veröffentlichung" title="Downloads seit Veröffentlichung" width="20px"> {{ episode.total_downloads | number_format(0, ',', '.') }} Downloads</span></small></p>
+{% endfor %}
