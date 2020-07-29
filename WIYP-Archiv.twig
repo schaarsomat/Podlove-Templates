@@ -1,27 +1,57 @@
 {# See it working http://whats-in-your-pants.de/podcast-archiv/ #}
-{% for season in podcast.seasons %} {# repeat for each season #}
-    <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2> {# title and subtitle of each episode #}
-    <p>{{ season.summary }}</p> {# Summary of the season, start date of the season, title and recording date of the first episode, extrahint if the episode is running and episode count  #}
-    <p>Die Staffel ist am {{ season.startDate.format('d.m.Y') }} gestartet{% if season.running %} und sie läuft gerade{% endif %}. Die erste Episode hieß "{{ season.firstEpisode.title }}" und wir haben sie am {{ season.firstEpisode.recordingDate.format('d.m.Y') }} aufgenommen. Staffel {{ season.number }} hat{% if season.running %} bisher{% endif %} {{ season.episodes|length }} Episoden.</p>
-    <h3>Episodenliste:</h3> {# episode list is done as a table which is not yet matching html 5-standarts #} 
-        <table style="border:0px">
-            <thead>
-                <tr>
-                    <th style="border:0px;text-align:left;vertical-align:top;width:7%"><u>Nr.</u></th>
-                    <th style="border:0px;text-align:left;vertical-align:top"><u>Titel &amp; Zusammenfassung</u></th>
-                    <th style="border:0px;text-align:left;vertical-align:top;width:13%"><u>Dauer</u></th>
-                    <th style="border:0px;text-align:left;vertical-align:top;width:13%"><u>Downloads</u></th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for episode in season.episodes %} {# repeat for every episode #}
-                    <tr>
-                        <td style="border:0px;text-align:right;vertical-align:top">{{ episode.number }}</td>
-                        <td style="border:0px;text-align:left;vertical-align:top"><strong><a href="{{ episode.url }}">{{ episode.title }}</a></strong><br><small><i>{{ episode.summary }}</i></small><br><small><u>Aufgenommen am</u> {{ episode.recordingDate.format('d.m.Y') }}, <u>veröffentlicht am</u> {{ episode.publicationDate.format('d.m.Y') }}</small></td>
-                        <td style="border:0px;text-align:right;vertical-align:top">{{ episode.duration }}</td>
-                        <td style="border:0px;text-align:right;vertical-align:top">{{ episode.total_downloads | number_format(0, ',', '.') }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+<p>{{ podcast.summary }}</p>
+
+{% set total = 0 %}
+{% for episode in podcast.episodes %}
+    {% set total = total + episode.duration.totalMilliseconds %}
+{% endfor %}
+
+{% set Durchschnittslänge = total / podcast.episodes|length %}
+
+{% set hours   = total  // (1000 * 3600) %}
+{% set minutes = (total // (1000 * 60)) % 60 %}
+{% set seconds = (total // 1000) % 60 %}
+
+{% set durchschnitthours   = Durchschnittslänge  // (1000 * 3600) %}
+{% set durchschnittminutes = (Durchschnittslänge // (1000 * 60)) % 60 %}
+{% set durchschnittseconds = (Durchschnittslänge // 1000) % 60 %}
+
+{% set Downloadsumme = 0 %}
+{% set Episodenzaehler = podcast.episodes|length %}
+{% for episode in podcast.episodes %}
+    {% set Downloadsumme = Downloadsumme + episode.total_downloads %}
+{% endfor %}
+
+{% set Durchschnitt = Downloadsumme / Episodenzaehler %}
+
+<p>"{{ podcast.title }}" besteht aus {{ podcast.episodes|length }} veröffentlichten Episoden. {% if podcast.episodes({post_status: 'future'})|length > 0 %} {{ podcast.episodes({post_status: 'future'})|length }} {% if podcast.episodes({post_status: 'future'})|length == 1 %}wird {% else %} werden {% endif %} demnächst veröffentlicht.{% endif %} {% if podcast.episodes({post_status: 'draft'})|length > 0 %} {{ podcast.episodes({post_status: 'draft'})|length }} weitere {% if podcast.episodes({post_status: 'draft'})|length == 1 %} liegt{% else %} liegen{% endif %} als Entwurf vor.{% endif %}</p>
+<p>Die Gesamtdauer aller veröffentlichten Episoden beträgt {{ hours }} Stunden {{ minutes }} {% if minutes == 1%}Minute{% else %}Minuten{% endif %} und {{ seconds }} {% if minutes == 1%}Sekunde{% else %}Sekunden{% endif %}. Die durchschnittliche Episode ist {% if durchschnitthours > 0 %}{{ durchschnitthours }} {% if durchschnitthours == 1%}Stunde{% else %}Stunden{% endif %}{% endif %} {{ durchschnittminutes }} {% if durchschnittminutes == 1%}Minute{% else %}Minuten{% endif %} und {{ durchschnittseconds }} {% if durchschnittseconds == 1%}Sekunde{% else %}Sekunden{% endif %} lang und wurde im Durchschnitt {{ Durchschnitt|round }} mal heruntergeladen. </p>
+    {% for episode in podcast.episodes({post_status: 'future'}) %}
+        <p>Die nächste Episode <b>"{{ episode.post.post_title }}"</b> wird am {{ episode.publicationDate.format('j. F Y') }} um {{ episode.publicationDate.format('H:i') }} Uhr erscheinen{% if episode.chapters|length > 0 %}, Themen sind unter anderem {% for chapter in episode.chapters|slice(2,5) %} "{{ chapter.title }}"{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}. {% if episode.duration.totalMilliseconds > 0 %} Die Episode ist {{ episode.duration }} lang, aber darauf kommt es ja bekanntlich nicht an. {% endif %}</p>
+    {% endfor %}
+
+<h2>Inhaltsverzeichnis:</h2>
+<p>Klicke auf den Titel der Staffel, um zu ihrer Episodenliste zu gelangen.</p>
+
+<ul>
+    {% for season in podcast.seasons %}
+        <li><a href="#{{ season.number }}">{{ season.title }}</a></li>
+    {% endfor %}
+</ul>
+
+{% for season in podcast.seasons %}
+    <h2 id="{{ season.number }}">{{ season.title }}&nbsp;-&nbsp;{{ season.subtitle }}</h2>
+    <p>{{ season.summary }}</p>
+    <p>Die Staffel ist am {{ season.startDate.format('d.m.Y') }} gestartet. Die erste Episode hieß "{{ season.firstEpisode.title }}" und wir haben sie am {{ season.firstEpisode.recordingDate.format('d.m.Y') }} aufgenommen. Staffel {{ season.number }} hat {{ season.episodes|length }} Episoden.</p>
+
+    <h3>Episodenliste:</h3>
+    {% for episode in season.episodes %}
+        <h4><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></h4>
+        <p style="margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid black">{{ episode.summary }}<br />
+        <small><span style="margin-right:25px">Aufgenommen am: {{ episode.recordingdate.format('d.m.Y') }}</span> <span style="margin-right:25px">Veröffentlicht am: {{ episode.publicationdate.format('d.m.Y') }} um {{ episode.publicationdate.format('H:i') }} Uhr.</span> <span style="margin-right:25px">Dauer: {{ episode.duration }}</span>Downloads: {{ episode.total_downloads | number_format(0, ',', '.') }}</small></p>
+        {% if loop.last %}
+            <div style="{{ random(['background-color:#A0DE5A;color:#27024E', 'background-color:#58D58C;color:#071020', 'background-color:#250209;color:#E36A15', 'background-color:#F27A17;color:#2F2907', 'background-color:#F2FEBA;color:#8B6E22', 'background-color:#0c0f84;color:#fcda48', 'background-color:#8ef174;color:#162e64']) }};padding-top:20px;padding-bottom:20px;padding-left:25px;padding-right:35px;text-align:center"><h3>Kauft Tobys Merch!</h3>
+            <strong>T-Shirts, Hoodies, Tassen usw. findet Ihr auf <a href="https://podcastnikshop.com/collections/whats-in-your-pants" target="_blank" style="color:#AE2773">podcastnikshop.com</a>!</strong></div>
+        {% endif %}
+    {% endfor %}
 {% endfor %}
