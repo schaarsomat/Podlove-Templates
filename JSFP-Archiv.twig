@@ -30,6 +30,7 @@ Ihre Gesamtdauer beträgt {{ hours }} Stunden {{ minutes }} Minuten und {{ secon
     {% set Minuten = episode.duration.minutes %} 
     {% set Sekunden = episode.duration.seconds %}
       <li style="margin-bottom:20px;border-top:1px solid grey"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span>{% if episode.explicit == 'yes' %}<span style="color: red;font-weight:bold;margin-left:15px"><abbr title="Explizit: Hier wird geschimpft und/oder über Sex und Geschlechtsteile gesprochen">(E)</abbr></span>{% endif %}<br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px">  {% if Stunden > 0 %}{{ Stunden }}{% endif %}
+      {# ATTENTION! Starting with Podlove Publisher 3.0 you can access the post title with episode.post_title and you should use that instead #}
         {% if Stunden  == 1 %} Stunde
         {% elseif Stunden  > 1 %} Stunden
         {% endif %}
