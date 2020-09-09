@@ -8,7 +8,7 @@
 <table class="tabelle">
     {% for episode in podcast.episodes %}
     {% set kategorie = episode.show.title %}
-    [# iterate through all episodes and set the variable 'kategorie' to the category of that specific episode #}
+    {# iterate through all episodes and set the variable 'kategorie' to the category of that specific episode #}
     <tr class="zeile">
         <td class="zelle-bild">
             <a href="{{ episode.url }}"><img src="{{ episode.image({fallback: true}).url }}" alt="{{ episode.title }}" title="{{ episode.title }}" class="logo"></a><br />
@@ -25,6 +25,7 @@
             {% endif %}
         </td>
         <td class="zelle-meta"><span class="episodentitel"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span> vom {{ episode.publicationdate.format('d.m.Y') }}<br />{{ episode.subtitle }}<br />
+        {# ATTENTION! Starting with Podlove Publisher 3.0 you can access the post title with episode.post_title and you should use that instead #}
         {# insert link and title of the episode, show date of publication and a very short summary #}
         <small>
             <strong>Moderation: </strong>
