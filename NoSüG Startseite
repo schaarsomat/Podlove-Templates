@@ -18,6 +18,7 @@
             {% set Minuten = episode.duration.minutes %} 
             {% set Sekunden = episode.duration.seconds %}
             <p style="margin-top:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br /><small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {% if Stunden > 0 %}{{ Stunden }}{% endif %}
+            {# ATTENTION! With Podlove Publisher 3.0 or higher you should use episode.post_title instead of episode.post.post_title! #}
             {% if Stunden  == 1 %} Stunde
             {% elseif Stunden  > 1 %} Stunden
             {% endif %}
