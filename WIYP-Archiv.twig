@@ -47,6 +47,7 @@
     <h3>Episodenliste:</h3>
     {% for episode in season.episodes %}
         <h4><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></h4>
+        {# ATTENTION! Starting with Podlove Publisher 3.0 you should use episode.post_title instead of episode.post.post_title #}
         <p style="margin-bottom:20px;padding-bottom:15px;border-bottom:1px solid black">{{ episode.summary }}<br />
         <small><span style="margin-right:25px">Aufgenommen am: {{ episode.recordingdate.format('d.m.Y') }}</span> <span style="margin-right:25px">Veröffentlicht am: {{ episode.publicationdate.format('d.m.Y') }} um {{ episode.publicationdate.format('H:i') }} Uhr.</span> <span style="margin-right:25px">Dauer: {{ episode.duration }}</span>Downloads: {{ episode.total_downloads | number_format(0, ',', '.') }}</small></p>
         {% if loop.last %}
