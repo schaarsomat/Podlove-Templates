@@ -16,6 +16,7 @@ displayed in a more compact way and another 5 in a supercompact way. See it work
 {% for episode in podcast.episodes({limit:'16'}) %}
         {% if loop.first %}
             <h1><span style="font-size:0.4em">Neueste Episode:</span> <br /><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></h1>
+            {# ATTENTION! Starting with Podlove Publisher 3.0 you can access the post title with episode.post_title and you should use that instead #}
             <p>{{ episode.summary }}</p>
             <p> </p>
             {{ episode.player }}
@@ -69,11 +70,13 @@ displayed in a more compact way and another 5 in a supercompact way. See it work
             <h1>Ältere Episoden:</h1>
         {% elseif loop.index > 10 %}
             <p><span style="font-size:1.5em"><a href="{{ episode.url }}"><b>{{ episode.post.post_title }}</b></a></span> vom {{ episode.publicationDate.format('j. F Y, H:i') }} Uhr{% if episode.contributors({group: 'gaeste'})|length > 0 %} zusammen mit {% for contributor in episode.contributors({group: 'gaeste'}) %}{{ contributor.name }}{% if not loop.last %}, {% endif %}{% endfor %}{% endif %}</p>
+            {# ATTENTION! Starting with Podlove Publisher 3.0 you can access the post title with episode.post_title and you should use that instead #}
         {% else %}    
             {% set Stunden = episode.duration.hours %}
             {% set Minuten = episode.duration.minutes %} 
             {% set Sekunden = episode.duration.seconds %}
             <p style="margin-top:20px"><span style="font-weight:bold;font-size:1.5em"><a href="{{ episode.url }}">{{ episode.post.post_title }}</a></span><br /><span style="font-weight:italic">{{ episode.subtitle }}</span><br />{% if episode.contributors({group: 'gaeste'})|length > 0 %}Diesmal mit dabei: {% for contributor in episode.contributors({group: 'gaeste'}) %} {{ contributor.name }} ({% if contributor.comment %}{{ contributor.comment }}{% else %}{{ contributor.jobtitle }}{% endif %}){% if not loop.last %}, {% else %}.{% endif %}{% endfor %}<br />{% endif %}<small><span class="podlove-duration" style="margin-right:30px"><img src="http://icons.joernschaar.de/dauer.png" alt="Die Dauer der Episode" title="Die Dauer der Episode" width="20px"> {% if Stunden > 0 %}{{ Stunden }}{% endif %}
+            {# ATTENTION! Starting with Podlove Publisher 3.0 you can access the post title with episode.post_title and you should use that instead #}
             {% if Stunden  == 1 %} Stunde
             {% elseif Stunden  > 1 %} Stunden
             {% endif %}
