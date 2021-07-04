@@ -1,0 +1,30 @@
+{% if not is_feed() %} {# displays everything only on the blog #}
+    {% for contributor in episode.contributors({role: 'guest'}) %}
+        <div class="contributor-profile">
+            <strong><small>Mit dabei:</small></strong>
+            {{ contributor.image.html({width: 100, height: 100, alt: contributor.name, title: contributor.name}) }} <br />
+            <strong>{% if contributor.nickname %} "{{contributor.nickname }}" {% endif %}{{ contributor.name }}</strong><br />
+            <small><em>{% if contributor.comment %}{{ contributor.comment }}{% else %}{{ contributor.jobtitle }}{% endif %}</em></small><br /><br />
+            {% for service in contributor.services({category: "social"}) %}
+                <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+                    {{ service.image.html({width: 20, heigth: 20, alt: service.name}) }}
+                </a>&nbsp;
+            {% endfor %}
+            {% if contributor.services({category: "donation"})|length > 0 %}<br />
+                {% for service in contributor.services({category: "donation"}) %}
+                    <a target="_blank" title="{{ service.title }}" href="{{ service.profileUrl }}">
+                        {{ service.image.html({width: 20, heigth: 20, alt: service.name}) }}
+                    </a>&nbsp;
+                {% endfor %}
+            {% endif %}
+        </div>
+    {% endfor %}
+{% endif %}
+
+<style>
+	.contributor-profile {
+	    width: 150px;
+		float:right;
+	    margin-left: 30px;
+   }
+</style>
