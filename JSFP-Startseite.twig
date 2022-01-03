@@ -6,10 +6,12 @@
 {% endfor %}
 {# gives information about episodes in draft state, showing only one of them #}
 {% if podcast.episodes({post_status: "draft"})|length > 0 %}
-    <p style="color: #a59f9f;margin-top:20px">{% if podcast.episodes({post_status: 'future'})|length > 0 %}Und: {% endif %}Ich sammle schon mal Themen für 
         {% for episode in podcast.episodes({post_status: 'draft', order: 'ASC', orderby: 'title'}) %}
           {% if loop.first %}"{{ episode.post.post_title }}". 
-             {% if episode.tags %}Stichworte für diese Episode sind unter anderem 
+             {% if episode.tags|length < 6 %}Eines der Stichworte für diese Episode ist
+                {% for tag in episode.tags %}
+                    {% if loop.last %}"{{ tag.name }}"{% endif %}{% endfor %}. 
+             {% else %}Stichworte für diese Episode sind unter anderem 
                {% for tag in episode.tags|slice(2,6) %}{{ tag.name }}{% if not loop.last %}, {% endif %}{% endfor %} und {% for tag in episode.tags %}{% if loop.first %}{{ tag.name }}{% endif %}{% endfor %}. 
              {% endif %} Aufnehmen werde ich voraussichtlich am {{ episode.recordingdate.format('j. F') }}. {{ random(['Vermutlich wird das auch das Veröffentlichungsdatum sein.', 'Wann die Episode veröffentlicht wird, steht noch nicht fest.', 'Wenn nichts dazwischen kommt, geht die Episode dann auch online.', 'Behalte an diesem Tag Deine Podcast-App im Auge!']) }}</p>
           {% endif %}
