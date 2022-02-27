@@ -1,19 +1,16 @@
-{# Contributors are displayed in a nice, HTML 5-compliant way. ATTENTION! If someone has more than three appearances, the template links to a dedicated page 
-for this contributor. You have to create this page manually and it must use the value assigned under contributor.name as URL. On this page you must use the template
-JSFP-ContributorEinzelseite in order to get it working! #}
-
 {% set Anzahl = 0 %}
 {% for contributor in podcast.contributors({role: 'guest'}) %}
     {% set Anzahl = Anzahl + contributor.episodes|length %}
 {% endfor %}
 
 <p>Eigentlich ist Jörn Schaars feiner Podcast ein Solo-Format, in dem ich über mein Leben spreche. Aber manchmal bewegt mich etwas in einer Art, dass ich mir Gäste einlade. Hier findest Du eine Liste der Menschen, die bislang so nett waren, mit mir ein wenig Quatsch zu machen. Bisher waren {{ podcast.contributors({role: 'guest'})|length }} Leute in {{ Anzahl }} Episoden bei mir zu Gast.</p>
+<p></p>
 <p>&nbsp;</p>
 
 <div class="container">
     {% for contributor in podcast.contributors({role: 'guest'}) %}
         <div class="mod">
-            <div class="item" style="width:70%">
+            <div class="item">
                 {{ contributor.image.html({width: 300, height: 300, alt: contributor.name, title: contributor.name}) }}
             </div>
             <div class="item" style="margin-top:5px">
@@ -29,10 +26,24 @@ JSFP-ContributorEinzelseite in order to get it working! #}
                 {% endfor %}                
             </div>
             <div class="item">
-                {% if contributor.episodes|length <= 3 %}
-                    <strong>{# {% if contributor.nickname %} "{{contributor.nickname }}" {% endif %} #} {{ contributor.name }}</strong> in {% for episode in contributor.episodes %}<a href="{{ episode.url }}">{{ episode.slug }}</a>{% if not loop.last %}, {% endif %}{% endfor %}
+                {% if contributor.episodes|length == 1 %}
+                    <strong>{% if contributor.nickname %}"{{contributor.nickname }}" {% endif %}{{ contributor.name }}</strong> in 
                 {% else %}
-                    {% if contributor.nickname %} "{{contributor.nickname }}" {% endif %}{{ contributor.name }}</strong> in <a href="https://www.meine-url-ist-laenger-als-deine.de/{{ contributor.name }}">{{ contributor.episodes|length }} Episoden</a>
+                    <strong>{% if contributor.nickname %}"{{contributor.nickname }}" {% endif %}{{ contributor.name }}</strong> in {{ contributor.episodes|length }} Episoden, zuletzt
+                {% endif %}
+            </div>
+            <div class="item">
+                {% if contributor.episodes|length == 1 %}
+                    {% for episode in contributor.episodes %}<a href="{{ episode.url }}">{{ episode.post.post_title }}</a>{% endfor %}
+                {% else %}
+                    {% for episode in contributor.episodes %}{% if loop.first %}<a href="{{ episode.url }}">{{ episode.post.post_title }}</a>{% endif %}{% endfor %}
+                {% endif %}
+            </div>
+            <div class="item">
+                {% if contributor.episodes|length == 1 %}
+                    {% for episode in contributor.episodes %}vom {{ episode.publicationDate.format('d.m.Y') }}{% endfor %}
+                {% else %}
+                    {% for episode in contributor.episodes %}{% if loop.first %}vom {{ episode.publicationDate.format('d.m.Y') }}{% endif %}{% endfor %}
                 {% endif %}
             </div>
         </div>
@@ -59,6 +70,8 @@ JSFP-ContributorEinzelseite in order to get it working! #}
        align-items: center;
        gap: 3px;
        flex-flow: row wrap;
+       flex: 0 0 auto;
+       flex-basis: 20%
    }
    .cont_ep {
        background-color: #cccccc;
